@@ -5,10 +5,12 @@ import (
 )
 
 func TestNewRlpString(t *testing.T) {
-	var value = "hello world"
+	var rightString = "0x48656c6c6f20576f726c6421"
+	var value = "Hello World!"
 	rString := CreateRlpString(value)
 
-	if rString.AsString() != "hello world" {
-		t.Errorf("Timesmape incorrect, got: %s, want: %s.", rString.AsString(), "hello world")
+	if rString.AsString() != rightString {
+		t.Errorf("Timesmape incorrect, got: %s, want: %s.", rString.AsString(), rightString)
 	}
+
 }

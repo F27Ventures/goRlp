@@ -1,9 +1,10 @@
 package rlpString
 
 import (
-	"encoding/hex"
 	"hash/fnv"
 	"math/big"
+
+	utils "github.com/gorlp/utils"
 )
 
 type RlpString struct {
@@ -39,7 +40,7 @@ func hash(s string) uint32 {
 }
 
 func (r *RlpString) AsString() string {
-	encodedStr := hex.EncodeToString(r.value)
+	encodedStr := utils.ToHexStringByte(r.value)
 	return encodedStr
 }
 func (r *RlpString) Hash() uint32 {
