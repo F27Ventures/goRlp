@@ -7,7 +7,6 @@ import (
 
 func ToHexStringByte(input []byte) string {
 	return toHexString(input, 0, len(input), true)
-
 }
 
 func toHexString(input []byte, offset int, length int, withPrefix bool) string {
