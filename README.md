@@ -3,4 +3,8 @@ This is a Go implementation of the RLP encoding library originally written in Ja
 
 
 # TODO
-Testing
+Test utils - Done
+Test rlpString - In progress
+Test rlpList - Not Done
+Test rlpEncoder - Not Done
+Test rlpDecoder - Not Done

@@ -12,5 +12,4 @@ func TestNewRlpString(t *testing.T) {
 	if rString.AsString() != rightString {
 		t.Errorf("Timesmape incorrect, got: %s, want: %s.", rString.AsString(), rightString)
 	}
-
 }
