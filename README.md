@@ -5,10 +5,10 @@ This is a Go implementation of the RLP encoding library originally written in Ja
 # TODO
 Test utils - Done
 
-Test rlpString - In progress
+Test rlpString - Done
 
-Test rlpList - Not Done
+Test rlpList - Done
 
-Test rlpEncoder - Not Done
+Test rlpEncoder - In progress
 
 Test rlpDecoder - Not Done
