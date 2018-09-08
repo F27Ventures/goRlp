@@ -19,13 +19,12 @@ func CreateRlpString(value string) *RlpString {
 	return NewRlpString([]byte(value))
 }
 
-func CreateRlpStringInt(value big.Int) *RlpString {
-	if value.Cmp(big.NewInt(1)) < 0 {
-		empty := []byte{}
-		return NewRlpString(empty)
+func CreateRlpStringBigInt(value *big.Int) *RlpString {
+	if value.Sign() < 0 {
+		return NewRlpString([]byte{})
 	} else {
-		var bytes []byte = value.Bytes()
-		if bytes[0] == 0 { // remove leading zero
+		var bytes = value.Bytes()
+		if int(bytes[0]) == 0 { // remove leading zero
 			return NewRlpString(bytes[1:])
 		} else {
 			return NewRlpString(bytes)

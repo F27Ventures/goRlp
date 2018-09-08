@@ -1,6 +1,7 @@
 package rlpString
 
 import (
+	"math/big"
 	"testing"
 )
 
@@ -10,6 +11,19 @@ func TestNewRlpString(t *testing.T) {
 	rString := CreateRlpString(value)
 
 	if rString.AsString() != rightString {
-		t.Errorf("Timesmape incorrect, got: %s, want: %s.", rString.AsString(), rightString)
+		t.Errorf("CreateRlpString incorrect, got: %s, want: %s.", rString.AsString(), rightString)
 	}
+
+	rString = CreateRlpStringBigInt(big.NewInt(10))
+	rightString = "0x0a"
+
+	if rString.AsString() != rightString {
+		t.Errorf("CreateRlpStringBigInt incorrect, got: %s, want: %s.", rString.AsString(), rightString)
+	}
+
+	rString = CreateRlpStringBigInt(big.NewInt(-10))
+	if rString.AsString() != rightString {
+		t.Errorf("CreateRlpStringBigInt incorrect, got: %s, want: %s.", rString.AsString(), "0x0a")
+	}
+
 }
