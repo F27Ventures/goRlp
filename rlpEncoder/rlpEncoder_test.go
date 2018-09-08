@@ -111,6 +111,24 @@ func TestNewRlpEncoderList(t *testing.T) {
 
 	// [ [], [[]], [ [], [[]] ] ] = [ 0xc7, 0xc0, 0xc1, 0xc0, 0xc3, 0xc0, 0xc1, 0xc0 ]
 
-	fmt.Printf(buffer.String())
+	rightAnswer = "c7c0c1c0c3c0c1c0"
+	rList = rlpList.NewRlpListVariadic(
+		rlpList.NewRlpListVariadic(),                                                                                       //[]
+		rlpList.NewRlpListVariadic(rlpList.NewRlpListVariadic()),                                                           //[[]]
+		rlpList.NewRlpListVariadic(rlpList.NewRlpListVariadic(), rlpList.NewRlpListVariadic(rlpList.NewRlpListVariadic())), // [ [], [[]] ]
+	)
 
+	result = EncodeAll(rList)
+
+	buffer.Reset()
+
+	for _, v := range result {
+		buffer.WriteString(fmt.Sprintf("%02x", v&0xff))
+	}
+
+	if buffer.String() != rightAnswer {
+		t.Errorf("EncodeAll 0 string incorrect, got: %s, want: %s.",
+			buffer.String(),
+			rightAnswer)
+	}
 }

@@ -9,6 +9,6 @@ Test rlpString - Done
 
 Test rlpList - Done
 
-Test rlpEncoder - In progress
+Test rlpEncoder - Done
 
-Test rlpDecoder - Not Done
+Test rlpDecoder - In progress
