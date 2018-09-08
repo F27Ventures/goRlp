@@ -3,6 +3,7 @@ package rlpEncoder
 import (
 	"fmt"
 	"reflect"
+	"strings"
 
 	rlpList "github.com/gorlp/rlpList"
 	rlpString "github.com/gorlp/rlpString"
@@ -49,18 +50,20 @@ var OFFSET_SHORT_LIST int = 0xc0
 var OFFSET_LONG_LIST int = 0xf7
 
 func EncodeAll(value interface{}) []byte {
-	if reflect.TypeOf(value).String() == "rlpString" {
-		return EncodeString(value.(rlpString.RlpString))
+	varType := reflect.TypeOf(value).String()
+	if strings.Contains(varType, "RlpString") {
+		// fmt.Printf("instanisinationg RlpString ")
+		return EncodeString(value.(*rlpString.RlpString))
 	} else {
-		return EncodeList(value.(rlpList.RlpList))
+		return EncodeList(value.(*rlpList.RlpList))
 	}
 }
 
-func EncodeString(value rlpString.RlpString) []byte {
+func EncodeString(value *rlpString.RlpString) []byte {
 	return Encode(value.GetBytes(), OFFSET_SHORT_STRING)
 }
 
-func EncodeList(value rlpList.RlpList) []byte {
+func EncodeList(value *rlpList.RlpList) []byte {
 	rlpTypes := value.GetValue()
 
 	if len(rlpTypes) == 0 {
@@ -76,7 +79,10 @@ func EncodeList(value rlpList.RlpList) []byte {
 }
 
 func Encode(bytesValue []byte, offset int) []byte {
-	if len(bytesValue) == 1 && offset == OFFSET_SHORT_STRING && bytesValue[0] >= byte(0x00) && bytesValue[0] >= byte(0x7f) {
+	if len(bytesValue) == 1 &&
+		offset == OFFSET_SHORT_STRING &&
+		bytesValue[0] >= byte(0x00) &&
+		bytesValue[0] <= byte(0x7f) {
 		return bytesValue
 	} else if len(bytesValue) < 55 {
 		result := make([]byte, len(bytesValue)+1)
@@ -113,6 +119,7 @@ func ToByteArry(value int) []byte {
 		byte(((value >> 16) & 0xff)),
 		byte(((value >> 8) & 0xff)),
 		byte(((value) & 0xff))}
+	return result
 }
 
 func Typeof(v interface{}) string {

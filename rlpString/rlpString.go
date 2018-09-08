@@ -20,7 +20,7 @@ func CreateRlpString(value string) *RlpString {
 }
 
 func CreateRlpStringBigInt(value *big.Int) *RlpString {
-	if value.Sign() < 0 {
+	if value.Sign() <= 0 {
 		return NewRlpString([]byte{})
 	} else {
 		var bytes = value.Bytes()
