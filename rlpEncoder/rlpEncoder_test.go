@@ -6,10 +6,11 @@ import (
 	"math/big"
 	"testing"
 
+	rlpList "github.com/gorlp/rlpList"
 	rlpString "github.com/gorlp/rlpString"
 )
 
-func TestNewRlpEncoder(t *testing.T) {
+func TestNewRlpEncoderString(t *testing.T) {
 	//  83 as offset is 80 and length of string is 3 thus, 83
 	// the d is 64, o is 6f, g is 67
 	rightAnswer := "83646f67"
@@ -88,6 +89,27 @@ func TestNewRlpEncoder(t *testing.T) {
 			buffer.String(),
 			rightAnswer)
 	}
+}
+
+func TestNewRlpEncoderList(t *testing.T) {
+
+	rightAnswer := "c0"
+	rList := rlpList.NewRlpListVariadic()
+
+	result := EncodeAll(rList)
+	var buffer bytes.Buffer
+
+	for _, v := range result {
+		buffer.WriteString(fmt.Sprintf("%02x", v&0xff))
+	}
+
+	if buffer.String() != rightAnswer {
+		t.Errorf("EncodeAll 0 string incorrect, got: %s, want: %s.",
+			buffer.String(),
+			rightAnswer)
+	}
+
+	// [ [], [[]], [ [], [[]] ] ] = [ 0xc7, 0xc0, 0xc1, 0xc0, 0xc3, 0xc0, 0xc1, 0xc0 ]
 
 	fmt.Printf(buffer.String())
 
