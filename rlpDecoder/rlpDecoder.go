@@ -45,7 +45,7 @@ var OFFSET_SHORT_LIST int = 0xc0
  */
 var OFFSET_LONG_LIST int = 0xf7
 
-func decode(rlpEncoded []byte) *rlpList.RlpList {
+func Decode(rlpEncoded []byte) *rlpList.RlpList {
 	rList := rlpList.NewRlpList(make([](interface{}), 0))
 	Traverse(rlpEncoded, 0, len(rlpEncoded), rList)
 	return rList
@@ -64,11 +64,12 @@ func Traverse(data []byte, startPos int, endPos int, rList *rlpList.RlpList) {
 			// first byte(i.e. prefix) is [0x00, 0x7f],
 			// and the string is the first byte itself exactly;
 			rlpData := []byte{byte(prefix)}
-			rList.SetValue(append(rList.GetValue(), rlpData.(interface{})...))
+
+			rList.SetValue(append(rList.GetValue(), rlpData.([](interface{}))...))
 			startPos += 1
 		} else if prefix == OFFSET_SHORT_STRING {
 			// null
-			emptyRstring = rlpString.NewRlpString([]byte{})
+			emptyRstring := rlpString.NewRlpString([]byte{})
 			startPos += 1
 
 		} else if prefix > OFFSET_SHORT_STRING && prefix <= OFFSET_LONG_STRING {
@@ -86,7 +87,7 @@ func Traverse(data []byte, startPos int, endPos int, rList *rlpList.RlpList) {
 
 			rList.SetValue(append(rList.GetValue(), rlpData.(interface{})...))
 
-			startPos += 1 + strLen
+			startPos += 1 + int(strLen)
 
 		} else if prefix > OFFSET_LONG_STRING && prefix < OFFSET_SHORT_LIST {
 			// 3. the data is a string if the range of the
@@ -96,13 +97,13 @@ func Traverse(data []byte, startPos int, endPos int, rList *rlpList.RlpList) {
 			// and the string follows the length of the string
 
 			var lenOfStrLen = byte(prefix - OFFSET_LONG_STRING)
-			var strLen = calcLength(lenOfStrLen, data, startPos)
+			var strLen = calcLength(int(lenOfStrLen), data, startPos)
 
 			rlpData := make([]byte, int(strLen))
-			copy(rlpData, data[startPos+lenOfStrLen+1:startPos+lenOfStrLen+1+int(strLen)])
+			copy(rlpData, data[startPos+int(lenOfStrLen)+1:startPos+int(lenOfStrLen)+1+int(strLen)])
 
-			rList.SetValue(append(rList.GetValue(), rlpData.(interface{})...))
-			startPos += lenOfStrLen + strLen + 1
+			rList.SetValue(append(rList.GetValue(), rlpData.([]interface{})...))
+			startPos += int(lenOfStrLen) + int(strLen) + 1
 
 		} else if prefix >= OFFSET_SHORT_LIST && prefix <= OFFSET_LONG_LIST {
 			// 4. the data is a list if the range of the
@@ -113,10 +114,10 @@ func Traverse(data []byte, startPos int, endPos int, rList *rlpList.RlpList) {
 			var listLen byte = byte(prefix - OFFSET_SHORT_LIST)
 
 			newLevelList := rlpList.NewRlpList(make([](interface{}), 0))
-			Traverse(rlpEncoded, startPos+1, startPos+listLen+1, newLevelList)
+			Traverse(data, startPos+1, startPos+int(listLen)+1, newLevelList)
 
 			rList.SetValue(append(rList.GetValue(), newLevelList.(interface{})...))
-			startPos += 1 + listLen
+			startPos += 1 + int(listLen)
 
 		} else if prefix > OFFSET_LONG_LIST {
 			// 5. the data is a list if the range of the
@@ -127,12 +128,12 @@ func Traverse(data []byte, startPos int, endPos int, rList *rlpList.RlpList) {
 			// the list follows the total payload of the list;
 
 			var lenOfListLen = byte(prefix - OFFSET_LONG_LIST)
-			var listLen = calcLength(lenOfListLen, data, startPos)
+			var listLen = calcLength(int(lenOfListLen), data, startPos)
 
 			newLevelList := rlpList.NewRlpList(make([](interface{}), 0))
-			Traverse(rlpEncoded, startPos+lenOfListLen+1, startPos+lenOfListLen+listLen+1, newLevelList)
+			Traverse(data, startPos+int(lenOfListLen)+1, startPos+int(lenOfListLen)+listLen+1, newLevelList)
 			rList.SetValue(append(rList.GetValue(), newLevelList.(interface{})...))
-			startPos += lenOfListLen + listLen + 1
+			startPos += int(lenOfListLen) + int(listLen) + 1
 		}
 	}
 }
