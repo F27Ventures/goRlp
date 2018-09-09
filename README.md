@@ -3,12 +3,14 @@ This is a Go implementation of the RLP encoding library originally written in Ja
 
 
 # TODO
-Test utils - Done
+* Test utils - Done
 
-Test rlpString - Done
+* Test rlpString - Done
 
-Test rlpList - Done
+* Test rlpList - Done
 
-Test rlpEncoder - Done
+* Test rlpEncoder - Done
 
-Test rlpDecoder - In progress
+* Test rlpDecoder - In progress
+
+* Error handling for wrong encoding in rlpDecoder - In progress
